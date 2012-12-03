@@ -18,7 +18,7 @@
   </head>
   <body onload="showData()">
     <div class="container">
-      <p>Below is the data entered into your form on this device.</p>
+      <p>Below is the data entered into your form on this device in CSV format.</p>
       <div>
         <textarea rows="10" style="width: 100%" id="output"></textarea>
       </div>
@@ -28,7 +28,7 @@
     <script>
     function showData() {
       var output = document.getElementById("output");
-      output.textContent = JSON.stringify(Localform.getData(), null, 2);
+      output.textContent = Localform.getDataAsCSV();
     }
     
     function resetData() {

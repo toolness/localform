@@ -17,7 +17,7 @@ $(window).ready(function() {
         var id = baseId + "_" + (i+1);
         var input = $('<input type="radio">')
           .attr("name", baseId)
-          .attr("value", id)
+          .attr("value", i+1)
           .attr("id", id);
         $('<td></td>').append(input).appendTo(row);
       });

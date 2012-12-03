@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Localform Test Suite</title>
+    <link rel="stylesheet" href="qunit.css">
+  </head>
+
+  <body>
+    <h1  id="qunit-header">Localform Test Suite</h1>
+    <h2  id="qunit-banner"></h2>
+    <div id="qunit-testrunner-toolbar"></div>
+    <h2  id="qunit-userAgent"></h2>
+    <ol  id="qunit-tests"></ol>
+    <div id="qunit-fixture"></div>
+
+    <script src="qunit.js"></script>
+    <script src="../localform.js"></script>
+    <script>
+    module("localform");
+    
+    test("csvLine() works", function() {
+      var csvLine = Localform._testing.csvLine;
+      
+      equal(csvLine([1,2,3]), "1,2,3");
+      equal(csvLine([true,5]), "1,5");
+      equal(csvLine([false,5]), ",5");
+      equal(csvLine([1,"LOL",3]), "1,LOL,3");
+      equal(csvLine([1,"LOL,u",3]), '1,"LOL,u",3');
+      equal(csvLine([1,"LOL,\"u\"",3]), '1,"LOL,""u""",3');
+      equal(csvLine([1,"LOL\nwut",3]), '1,"LOL\nwut",3');
+      equal(csvLine([1,"LOL\n\"wut\"",3]), '1,"LOL\n""wut""",3');
+      equal(csvLine([1,"\n\"wut\" \"wut\"",3]), '1,"\n""wut"" ""wut""",3');
+    });
+    
+    if (location.search.match(/externalreporter=1/))
+      document.write('<script src="/externalreporter.js"></' + 'script>');
+    </script>
+  </body>
+</html>
