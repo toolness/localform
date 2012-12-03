@@ -20,6 +20,17 @@
         <p>Submitted data can be retrieved via the <a href="admin.html">admin</a> page.</p>
       </div>
       <form class="form-horizontal">
+        <div data-role="radio-button-table" class="table table-striped">
+          <ol class="answers">
+            <li>NO!! Not at all like me.</li>
+            <li>Not very much like me.</li>
+            <li>A little not like me.</li>
+          </ol>
+          <ol class="questions">
+            <li id="q1">I don't get distracted when I'm learning how to use technology.</li>
+            <li id="q2">My middle name is "danger".</li>
+          </ol>
+        </div>
         <div class="control-group">
           <label class="control-label" for="inputName">Name</label>
           <div class="controls">
@@ -43,5 +54,7 @@
       </form>
     </div>
     <script src="localform.js"></script>
+    <script src="zepto.js"></script>
+    <script src="radio-button-table.js"></script>
   </body>
 </html>

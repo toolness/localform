@@ -20,7 +20,7 @@ var Localform = (function() {
         return;
       if (input.type == "text" || input.type == "textarea")
         result[input.id] = input.value;
-      if (input.type == "checkbox")
+      if (input.type == "checkbox" || input.type == "radio")
         result[input.id] = input.checked;
     });
     results.push(result);
