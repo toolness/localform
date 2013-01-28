@@ -22,9 +22,17 @@ var Localform = (function() {
     }).join(',');
   }
   
-  function setData(results) {
+  function getJsonStorage(key, defaultResult) {
+    var result = defaultResult;
     try {
-      localStorage[RESULTS_KEY_NAME] = JSON.stringify(results);
+      result = JSON.parse(localStorage[key]);
+    } catch (e) {}
+    return result;
+  }
+  
+  function setJsonStorage(key, value) {
+    try {
+      localStorage[key] = JSON.stringify(value);
     } catch (e) {
       alert(STORAGE_ERR_MSG);
       throw e;
@@ -65,11 +73,11 @@ var Localform = (function() {
     });
     return result;
   };
-
+  
   window.addEventListener("submit", function(event) {
     var results = Localform.getData();
     results.push(Localform.saveForm(event.target));
-    setData(results);
+    setJsonStorage(RESULTS_KEY_NAME, results);
     alert(THANKS_MSG);
     event.preventDefault();
     event.target.reset();
@@ -94,24 +102,21 @@ var Localform = (function() {
   };
   
   Localform.getData = function() {
-    var results;
-    try {
-      results = JSON.parse(localStorage[RESULTS_KEY_NAME]);
-    } catch (e) {}
+    var results = getJsonStorage(RESULTS_KEY_NAME);
     if (!Array.isArray(results))
       results = [];
     return results;
   };
   
   Localform.resetData = function() {
-    setData([]);
+    setJsonStorage(RESULTS_KEY_NAME, []);
   };
   
   (function sanityCheck() {
     try {
       var random = Math.random().toString();
-      localStorage["LF_sanitycheck"] = random;
-      if (localStorage["LF_sanitycheck"] != random) {
+      setJsonStorage("LF_sanitycheck", {random: random});
+      if (getJsonStorage("LF_sanitycheck").random != random) {
         throw new Error("sanity check failure");
       }
     } catch (e) {
