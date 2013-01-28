@@ -42,7 +42,8 @@
         if (!reqsLeft) return;
         self.attr("disabled", "");
         results.forEach(function(result) {
-          $.post("/submit", JSON.stringify(result), function() {
+          var data = JSON.stringify(result);
+          $.post("/submit?bust=" + Date.now(), data, function() {
             if (--reqsLeft == 0) {
               self.removeAttr("disabled");
               alert(results.length + " entries successfully submitted.");

@@ -100,7 +100,7 @@ var Localform = (function() {
     setJsonStorage(AUTOSAVE_KEY_NAME, {});
 
     req = new XMLHttpRequest();
-    req.open("POST", "/submit");
+    req.open("POST", "/submit?bust=" + Date.now());
     req.setRequestHeader('Content-Type', 'application/json');
     req.send(JSON.stringify(result));
 
