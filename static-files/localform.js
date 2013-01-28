@@ -3,6 +3,7 @@
 var Localform = (function() {
   var Localform = {};
   var RESULTS_KEY_NAME = "LF_results";
+  var AUTOSAVE_KEY_NAME = "LF_autosave_result";
   var THANKS_MSG = "Thanks for your submission!";
   var STORAGE_ERR_MSG = "FATAL ERROR: Unable to store data locally!";
 
@@ -44,11 +45,12 @@ var Localform = (function() {
     [].slice.call(inputs).forEach(function(input) {
       if (!input.id)
         return;
-      if (input.type == "text" || input.type == "textarea")
+      if ((input.type == "text" || input.type == "textarea") &&
+          typeof(data[input.id]) == "string")
         input.value = data[input.id];
-      if (input.type == "checkbox")
+      if (input.type == "checkbox" && typeof(data[input.id] == "boolean"))
         input.checked = data[input.id];
-      if (input.type == "radio")
+      if (input.type == "radio" && typeof(data[input.name] == "string"))
         input.checked = (data[input.name] == input.value);
     });
   };
@@ -73,13 +75,27 @@ var Localform = (function() {
     });
     return result;
   };
+
+  window.addEventListener("DOMContentLoaded", function(event) {
+    var forms = document.getElementsByTagName("form");
+    [].slice.call(forms).forEach(function(form) {
+      Localform.restoreForm(form, getJsonStorage(AUTOSAVE_KEY_NAME, {}));
+    });
+  }, false);
+  
+  document.body.addEventListener("change", function(event) {
+    if (!event.target.form) return;
+    var formData = Localform.saveForm(event.target.form);
+    setJsonStorage(AUTOSAVE_KEY_NAME, formData);
+  }, false);
   
   window.addEventListener("submit", function(event) {
     var results = Localform.getData();
+    event.preventDefault();
     results.push(Localform.saveForm(event.target));
     setJsonStorage(RESULTS_KEY_NAME, results);
+    setJsonStorage(AUTOSAVE_KEY_NAME, {});
     alert(THANKS_MSG);
-    event.preventDefault();
     event.target.reset();
   }, true);
   
@@ -110,6 +126,7 @@ var Localform = (function() {
   
   Localform.resetData = function() {
     setJsonStorage(RESULTS_KEY_NAME, []);
+    setJsonStorage(AUTOSAVE_KEY_NAME, {});
   };
   
   (function sanityCheck() {

@@ -114,6 +114,20 @@
           "isNotBad": true
         });
       });
+      
+      test("restoreForm() ignores undefined fields", function() {
+        form.reset();
+        Localform.restoreForm(form, {});
+        deepEqual(Localform.saveForm(form), {
+          "dangerLevel": "",
+          "distractionLevel": "",
+          "isNoob": "",
+          "inputEmail": "",
+          "inputName": "",
+          "isCool": false,
+          "isNotBad": false
+        });
+      });
     })();
     
     test("csvLine() works", function() {
