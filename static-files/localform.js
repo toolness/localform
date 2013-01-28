@@ -27,10 +27,9 @@ var Localform = (function() {
     } catch (e) {}
   }
   
-  window.addEventListener("submit", function(event) {
-    var inputs = event.target.querySelectorAll("input");
+  Localform.saveForm = function(form) {
+    var inputs = form.querySelectorAll("input");
     var result = {};
-    var results = Localform.getData();
     [].slice.call(inputs).forEach(function(input) {
       if (!input.id)
         return;
@@ -46,7 +45,12 @@ var Localform = (function() {
           result[input.name] = input.value;
       }
     });
-    results.push(result);
+    return result;
+  };
+
+  window.addEventListener("submit", function(event) {
+    var results = Localform.getData();
+    results.push(Localform.saveForm(event.target));
     setData(results);
     alert(THANKS_MSG);
   }, true);

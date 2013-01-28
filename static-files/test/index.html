@@ -12,12 +12,71 @@
     <div id="qunit-testrunner-toolbar"></div>
     <h2  id="qunit-userAgent"></h2>
     <ol  id="qunit-tests"></ol>
-    <div id="qunit-fixture"></div>
+    <div id="qunit-fixture">
+      <form id="test-form">
+        <div data-role="radio-button-table" class="table table-striped">
+          <ol class="answers">
+            <li>NO!! Not at all like me.</li>
+            <li>Not very much like me.</li>
+            <li>A little not like me.</li>
+          </ol>
+          <ol class="questions">
+            <li id="distractionLevel">I don't get distracted when I'm learning how to use technology.</li>
+            <li id="dangerLevel">My middle name is "danger".</li>
+            <li id="isNoob">I am a noob.</li>
+          </ol>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="inputName">Name</label>
+          <div class="controls">
+            <input type="text" id="inputName" placeholder="Name" autocomplete="off">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="inputEmail">Email</label>
+          <div class="controls">
+            <input type="text" id="inputEmail" placeholder="Email" autocomplete="off">
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="controls">
+            <label class="checkbox">
+              <input type="checkbox" id="isCool" autocomplete="off"> I am cool.
+            </label>
+            <label class="checkbox">
+              <input type="checkbox" id="isNotBad" autocomplete="off"> I am not bad.
+            </label>
+            <button type="submit" class="btn">Submit</button>
+          </div>
+        </div>
+      </form>
+    </div>
 
-    <script src="qunit.js"></script>
+    <script src="../zepto.js"></script>
+    <script src="../radio-button-table.js"></script>
     <script src="../localform.js"></script>
+    <script src="qunit.js"></script>
     <script>
     module("localform");
+    
+    test("saveForm() works", function() {
+      $("#distractionLevel_1")[0].checked = true;
+      $("#dangerLevel_2")[0].checked = true;
+      $("[name='isNoob']").each(function() { this.checked = false; });
+      $("#inputName").val("John Doe");
+      $("#inputEmail").val("john@doe.com");
+      $("#isCool")[0].checked = false;
+      $("#isNotBad")[0].checked = true;
+      deepEqual(Localform.saveForm($("#test-form")[0]), {
+        "dangerLevel": "2",
+        "distractionLevel": "1",
+        "isNoob": "",
+        "inputEmail": "john@doe.com",
+        "inputName": "John Doe",
+        "isCool": false,
+        "isNotBad": true
+      });
+    });
     
     test("csvLine() works", function() {
       var csvLine = Localform._testing.csvLine;
