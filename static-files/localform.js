@@ -2,8 +2,9 @@
 
 var Localform = (function() {
   var Localform = {};
-  var KEY_NAME = "LF_results";
+  var RESULTS_KEY_NAME = "LF_results";
   var THANKS_MSG = "Thanks for your submission!";
+  var STORAGE_ERR_MSG = "FATAL ERROR: Unable to store data locally!";
 
   function csvLine(items) {
     return items.map(function(item) {
@@ -23,8 +24,11 @@ var Localform = (function() {
   
   function setData(results) {
     try {
-      localStorage[KEY_NAME] = JSON.stringify(results);
-    } catch (e) {}
+      localStorage[RESULTS_KEY_NAME] = JSON.stringify(results);
+    } catch (e) {
+      alert(STORAGE_ERR_MSG);
+      throw e;
+    }
   }
   
   Localform.restoreForm = function(form, data) {
@@ -92,7 +96,7 @@ var Localform = (function() {
   Localform.getData = function() {
     var results;
     try {
-      results = JSON.parse(localStorage[KEY_NAME]);
+      results = JSON.parse(localStorage[RESULTS_KEY_NAME]);
     } catch (e) {}
     if (!Array.isArray(results))
       results = [];
@@ -102,6 +106,18 @@ var Localform = (function() {
   Localform.resetData = function() {
     setData([]);
   };
+  
+  (function sanityCheck() {
+    try {
+      var random = Math.random().toString();
+      localStorage["LF_sanitycheck"] = random;
+      if (localStorage["LF_sanitycheck"] != random) {
+        throw new Error("sanity check failure");
+      }
+    } catch (e) {
+      alert(STORAGE_ERR_MSG);
+    }
+  })();
   
   return Localform;
 })();
