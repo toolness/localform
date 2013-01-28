@@ -68,7 +68,7 @@ var Localform = (function() {
     setData(results);
     alert(THANKS_MSG);
     event.preventDefault();
-    window.location.reload();
+    event.target.reset();
   }, true);
   
   Localform._testing = {
