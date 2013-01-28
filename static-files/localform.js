@@ -27,6 +27,20 @@ var Localform = (function() {
     } catch (e) {}
   }
   
+  Localform.restoreForm = function(form, data) {
+    var inputs = form.querySelectorAll("input");
+    [].slice.call(inputs).forEach(function(input) {
+      if (!input.id)
+        return;
+      if (input.type == "text" || input.type == "textarea")
+        input.value = data[input.id];
+      if (input.type == "checkbox")
+        input.checked = data[input.id];
+      if (input.type == "radio")
+        input.checked = (data[input.name] == input.value);
+    });
+  };
+  
   Localform.saveForm = function(form) {
     var inputs = form.querySelectorAll("input");
     var result = {};

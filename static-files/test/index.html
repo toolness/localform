@@ -59,24 +59,62 @@
     <script>
     module("localform");
     
-    test("saveForm() works", function() {
-      $("#distractionLevel_1")[0].checked = true;
-      $("#dangerLevel_2")[0].checked = true;
-      $("[name='isNoob']").each(function() { this.checked = false; });
-      $("#inputName").val("John Doe");
-      $("#inputEmail").val("john@doe.com");
-      $("#isCool")[0].checked = false;
-      $("#isNotBad")[0].checked = true;
-      deepEqual(Localform.saveForm($("#test-form")[0]), {
-        "dangerLevel": "2",
-        "distractionLevel": "1",
-        "isNoob": "",
-        "inputEmail": "john@doe.com",
-        "inputName": "John Doe",
-        "isCool": false,
-        "isNotBad": true
+    (function formTests() {
+      var form = $("#test-form")[0];
+      
+      test("restoreForm() works", function() {
+        form.reset();
+        Localform.restoreForm(form, {
+          "dangerLevel": "3",
+          "distractionLevel": "",
+          "isNoob": "",
+          "inputEmail": "foo@bar.com",
+          "inputName": "",
+          "isCool": true,
+          "isNotBad": false
+        });
+        equal($("#dangerLevel_3", form)[0].checked, true);
+        $("[name='distractionLevel']", form).each(function() {
+          equal(this.checked, false);
+        });
+        $("[name='isNoob']", form).each(function() {
+          equal(this.checked, false);
+        });
+        equal($("#inputEmail", form).val(), "foo@bar.com");
+        equal($("#inputName", form).val(), "");
+        equal($("#isCool", form)[0].checked, true);
+        equal($("#isNotBad", form)[0].checked, false);
       });
-    });
+    
+      test("saveForm() works", function() {
+        form.reset();
+        deepEqual(Localform.saveForm(form), {
+          "dangerLevel": "",
+          "distractionLevel": "",
+          "isNoob": "",
+          "inputEmail": "",
+          "inputName": "",
+          "isCool": false,
+          "isNotBad": false
+        });
+        $("#distractionLevel_1", form)[0].checked = true;
+        $("#dangerLevel_2", form)[0].checked = true;
+        $("[name='isNoob']", form).each(function() { this.checked = false; });
+        $("#inputName", form).val("John Doe");
+        $("#inputEmail", form).val("john@doe.com");
+        $("#isCool", form)[0].checked = false;
+        $("#isNotBad", form)[0].checked = true;
+        deepEqual(Localform.saveForm(form), {
+          "dangerLevel": "2",
+          "distractionLevel": "1",
+          "isNoob": "",
+          "inputEmail": "john@doe.com",
+          "inputName": "John Doe",
+          "isCool": false,
+          "isNotBad": true
+        });
+      });
+    })();
     
     test("csvLine() works", function() {
       var csvLine = Localform._testing.csvLine;
