@@ -53,6 +53,8 @@ var Localform = (function() {
     results.push(Localform.saveForm(event.target));
     setData(results);
     alert(THANKS_MSG);
+    event.preventDefault();
+    window.location.reload();
   }, true);
   
   Localform._testing = {
