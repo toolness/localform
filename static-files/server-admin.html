@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="bootstrap.css">
+    <link rel="stylesheet" href="bootstrap-responsive.css">
+    <style>
+      body {
+        margin: 20px;
+      }
+      
+      textarea {
+        font-family: Menlo, Monaco, monospace;
+      }
+    </style>
+    <title>Server Admin</title>
+  </head>
+  <body>
+    <div class="container">
+      <p>Below is all data submitted to the server.</p>
+      <div>
+        <textarea rows="10" style="width: 100%" id="output"></textarea>
+      </div>
+    </div>
+    <script src="localform.js"></script>
+    <script src="zepto.js"></script>
+    <script>
+    $(window).ready(function() {
+      $("#output").val("");
+      $.getJSON('/submissions', function(blob) {
+        $("#output").val(Localform.getDataAsCSV(blob));
+      });
+    });
+    </script>
+  </body>
+</html>

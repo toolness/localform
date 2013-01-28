@@ -91,10 +91,19 @@ var Localform = (function() {
   
   window.addEventListener("submit", function(event) {
     var results = Localform.getData();
+    var result = Localform.saveForm(event.target);
+    var req;
+
     event.preventDefault();
-    results.push(Localform.saveForm(event.target));
+    results.push(result);
     setJsonStorage(RESULTS_KEY_NAME, results);
     setJsonStorage(AUTOSAVE_KEY_NAME, {});
+
+    req = new XMLHttpRequest();
+    req.open("POST", "/submit");
+    req.setRequestHeader('Content-Type', 'application/json');
+    req.send(JSON.stringify(result));
+
     alert(THANKS_MSG);
     event.target.reset();
   }, true);
@@ -103,10 +112,11 @@ var Localform = (function() {
     csvLine: csvLine
   };
   
-  Localform.getDataAsCSV = function() {
+  Localform.getDataAsCSV = function(data) {
     var lines = [];
     var keys = null;
-    this.getData().forEach(function(result) {
+    if (!data) data = this.getData();
+    data.forEach(function(result) {
       if (!keys) {
         keys = Object.keys(result);
         keys.sort();

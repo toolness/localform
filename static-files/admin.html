@@ -16,25 +16,41 @@
     </style>
     <title>Local Form Admin</title>
   </head>
-  <body onload="showData()">
+  <body>
     <div class="container">
       <p>Below is the data entered into your form on this device in CSV format.</p>
       <div>
         <textarea rows="10" style="width: 100%" id="output"></textarea>
       </div>
-      <button class="btn btn-danger" onclick="resetData()">Clear Data</button>
+      <button class="btn btn-danger" id="reset-data">Clear Data</button>
+      <button class="btn" id="resubmit-data">Resubmit Data to Server</button>
     </div>
     <script src="localform.js"></script>
+    <script src="zepto.js"></script>
     <script>
-    function showData() {
-      var output = document.getElementById("output");
-      output.textContent = Localform.getDataAsCSV();
-    }
-    
-    function resetData() {
-      Localform.resetData();
-      showData();
-    }
+    $(window).ready(function() {
+      $("#output").val(Localform.getDataAsCSV());
+      $("#reset-data").click(function() {
+        Localform.resetData();
+        $("#output").val(Localform.getDataAsCSV());
+      });
+      $("#resubmit-data").click(function() {
+        var results = Localform.getData();
+        var reqsLeft = results.length;
+        var self = $(this);
+        
+        if (!reqsLeft) return;
+        self.attr("disabled", "");
+        results.forEach(function(result) {
+          $.post("/submit", JSON.stringify(result), function() {
+            if (--reqsLeft == 0) {
+              self.removeAttr("disabled");
+              alert(results.length + " entries successfully submitted.");
+            }
+          });
+        });
+      });
+    });
     </script>
   </body>
 </html>

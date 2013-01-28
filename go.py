@@ -68,6 +68,15 @@ def make_app():
             print "Stored %d bytes of submission data." % length
             start_response('200 OK', [('Content-Type', 'text/plain')])
             return ['Thanks!']
+        if path == '/submissions':
+            if environ['REMOTE_ADDR'] != '127.0.0.1':
+                start_response('403 Forbidden',
+                               [('Content-Type', 'text/plain')])
+                return ['this endpoint is only reachable from 127.0.0.1']
+            start_response('200 OK', [('Content-Type', 'application/json')])
+            return [json.dumps([
+                row['submission'] for row in get_db_rows(init_db())
+            ])]
         if path.endswith('/'):
             path = '%sindex.html' % path
         fileparts = path[1:].split('/')
