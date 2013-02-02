@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 from wsgiref.simple_server import make_server
 from wsgiref.util import FileWrapper
 import os
