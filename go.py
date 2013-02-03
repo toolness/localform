@@ -119,7 +119,7 @@ def cmd_serve(args):
                 notes = "this computer only"
             url = "http://%s:%d" % (ip, args.port)
             if notes:
-                notes = "(via %s)" % notes
+                notes = "(via %s)" % notes.lower()
             print "  %-30s %s" % (url, notes)
     print "press ctrl-c to stop the server."
     server.serve_forever()
