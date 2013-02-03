@@ -39,6 +39,12 @@
           </div>
         </div>
         <div class="control-group">
+          <label class="control-label" for="inputAge">Age</label>
+          <div class="controls">
+            <input type="number" id="inputAge" placeholder="Age" min="4" max="100" pattern="\d+" autocomplete="off" required>
+          </div>
+        </div>
+        <div class="control-group">
           <div class="controls">
             <label class="checkbox">
               <input type="checkbox" id="isCool" autocomplete="off"> I am cool.
@@ -73,6 +79,7 @@
           "isNoob": "",
           "inputEmail": "foo@bar.com",
           "inputName": "",
+          "inputAge": "",
           "isCool": true,
           "isNotBad": false
         });
@@ -85,6 +92,7 @@
         });
         equal($("#inputEmail", form).val(), "foo@bar.com");
         equal($("#inputName", form).val(), "");
+        equal($("#inputAge", form).val(), "");
         equal($("#isCool", form)[0].checked, true);
         equal($("#isNotBad", form)[0].checked, false);
       });
@@ -97,6 +105,7 @@
           "isNoob": "",
           "inputEmail": "",
           "inputName": "",
+          "inputAge": "",
           "isCool": false,
           "isNotBad": false
         });
@@ -105,6 +114,7 @@
         $("[name='isNoob']", form).each(function() { this.checked = false; });
         $("#inputName", form).val("John Doe");
         $("#inputEmail", form).val("john@doe.com");
+        $("#inputAge", form).val("14");
         $("#isCool", form)[0].checked = false;
         $("#isNotBad", form)[0].checked = true;
         deepEqual(Localform.saveForm(form), {
@@ -113,6 +123,7 @@
           "isNoob": "",
           "inputEmail": "john@doe.com",
           "inputName": "John Doe",
+          "inputAge": "14",
           "isCool": false,
           "isNotBad": true
         });
@@ -127,6 +138,7 @@
           "isNoob": "",
           "inputEmail": "",
           "inputName": "",
+          "inputAge": "",
           "isCool": false,
           "isNotBad": false
         });
