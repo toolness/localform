@@ -70,6 +70,16 @@
     
     (function formTests() {
       var form = $("#test-form")[0];
+      var emptyFormJSON = {
+        "dangerLevel": "",
+        "distractionLevel": "",
+        "isNoob": "",
+        "inputEmail": "",
+        "inputName": "",
+        "inputAge": "",
+        "isCool": false,
+        "isNotBad": false
+      };
       
       test("restoreForm() works", function() {
         form.reset();
@@ -99,16 +109,7 @@
     
       test("saveForm() works", function() {
         form.reset();
-        deepEqual(Localform.saveForm(form), {
-          "dangerLevel": "",
-          "distractionLevel": "",
-          "isNoob": "",
-          "inputEmail": "",
-          "inputName": "",
-          "inputAge": "",
-          "isCool": false,
-          "isNotBad": false
-        });
+        deepEqual(Localform.saveForm(form), emptyFormJSON);
         $("#distractionLevel_1", form)[0].checked = true;
         $("#dangerLevel_2", form)[0].checked = true;
         $("[name='isNoob']", form).each(function() { this.checked = false; });
@@ -132,16 +133,7 @@
       test("restoreForm() ignores undefined fields", function() {
         form.reset();
         Localform.restoreForm(form, {});
-        deepEqual(Localform.saveForm(form), {
-          "dangerLevel": "",
-          "distractionLevel": "",
-          "isNoob": "",
-          "inputEmail": "",
-          "inputName": "",
-          "inputAge": "",
-          "isCool": false,
-          "isNotBad": false
-        });
+        deepEqual(Localform.saveForm(form), emptyFormJSON);
       });
     })();
     
