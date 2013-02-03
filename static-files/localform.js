@@ -52,6 +52,11 @@ var Localform = (function() {
     setJsonStorage(AUTOSAVE_KEY_NAME, {});
   }
   
+  function inputIsTextlike(input) {
+    return (input.type == "text" || input.type == "textarea" ||
+            input.type == "email");
+  }
+  
   function sanityCheck() {
     try {
       var random = Math.random().toString();
@@ -77,9 +82,7 @@ var Localform = (function() {
     [].slice.call(inputs).forEach(function(input) {
       if (!input.id)
         return;
-      if ((input.type == "text" || input.type == "textarea" ||
-           input.type == "email") &&
-          typeof(data[input.id]) == "string")
+      if (inputIsTextlike(input) && typeof(data[input.id]) == "string")
         input.value = data[input.id];
       if (input.type == "checkbox" && typeof(data[input.id] == "boolean"))
         input.checked = data[input.id];
@@ -94,8 +97,7 @@ var Localform = (function() {
     [].slice.call(inputs).forEach(function(input) {
       if (!input.id)
         return;
-      if (input.type == "text" || input.type == "textarea" ||
-          input.type == "email")
+      if (inputIsTextlike(input))
         result[input.id] = input.value;
       if (input.type == "checkbox")
         result[input.id] = input.checked;
