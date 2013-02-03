@@ -63,13 +63,19 @@
     <script src="../localform.js"></script>
     <script src="qunit.js"></script>
     <script>
-    Localform.storagePrefix = "TEST_";
-    Localform.confirm = function() { return true; }
-
-    module("localform");
+    var form = $("#test-form")[0];
     
-    (function formTests() {
-      var form = $("#test-form")[0];
+    Localform.storagePrefix = "TEST_";
+
+    module("localform", {
+      setup: function() {
+        Localform.confirm = function() { return true; };
+        Localform.resetData();
+        form.reset();
+      }
+    });
+    
+    (function jsonFormTests() {
       var emptyFormJSON = {
         "dangerLevel": "",
         "distractionLevel": "",
@@ -82,7 +88,6 @@
       };
       
       test("restoreForm() works", function() {
-        form.reset();
         Localform.restoreForm(form, {
           "dangerLevel": "3",
           "distractionLevel": "",
@@ -108,7 +113,6 @@
       });
     
       test("saveForm() works", function() {
-        form.reset();
         deepEqual(Localform.saveForm(form), emptyFormJSON);
         $("#distractionLevel_1", form)[0].checked = true;
         $("#dangerLevel_2", form)[0].checked = true;
@@ -131,12 +135,11 @@
       });
       
       test("restoreForm() ignores undefined fields", function() {
-        form.reset();
         Localform.restoreForm(form, {});
         deepEqual(Localform.saveForm(form), emptyFormJSON);
       });
     })();
-    
+
     test("csvLine() works", function() {
       var csvLine = Localform._testing.csvLine;
       
