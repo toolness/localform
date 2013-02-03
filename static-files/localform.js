@@ -6,6 +6,7 @@ var Localform = (function() {
   var AUTOSAVE_KEY_NAME = "LF_autosave_result";
   var THANKS_MSG = "Thanks for your submission!";
   var STORAGE_ERR_MSG = "FATAL ERROR: Unable to store data locally!";
+  var VALIDATION_ERR_MSG = "Please fill out all required fields.";
 
   function csvLine(items) {
     return items.map(function(item) {
@@ -95,6 +96,8 @@ var Localform = (function() {
     var req;
 
     event.preventDefault();
+    if (!event.target.checkValidity())
+      return alert(VALIDATION_ERR_MSG);
     results.push(result);
     setJsonStorage(RESULTS_KEY_NAME, results);
     setJsonStorage(AUTOSAVE_KEY_NAME, {});
