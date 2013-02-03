@@ -1,7 +1,9 @@
 "use strict";
 
 var Localform = (function() {
-  var Localform = {};
+  var Localform = {
+    storagePrefix: ""
+  };
   var RESULTS_KEY_NAME = "LF_results";
   var AUTOSAVE_KEY_NAME = "LF_autosave_result";
   var THANKS_MSG = "Thanks for your submission!";
@@ -30,25 +32,45 @@ var Localform = (function() {
   function getJsonStorage(key, defaultResult) {
     var result = defaultResult;
     try {
-      result = JSON.parse(localStorage[key]);
+      result = JSON.parse(localStorage[Localform.storagePrefix + key]);
     } catch (e) {}
     return result;
   }
   
   function setJsonStorage(key, value) {
     try {
-      localStorage[key] = JSON.stringify(value);
+      localStorage[Localform.storagePrefix + key] = JSON.stringify(value);
     } catch (e) {
-      alert(STORAGE_ERR_MSG);
+      Localform.alert(STORAGE_ERR_MSG);
       throw e;
     }
   }
   
   function confirmFormReset(event) {
-    if (!confirm(CONFIRM_FORM_RESET_MSG))
+    if (!Localform.confirm(CONFIRM_FORM_RESET_MSG))
       return event.preventDefault();
     setJsonStorage(AUTOSAVE_KEY_NAME, {});
   }
+  
+  function sanityCheck() {
+    try {
+      var random = Math.random().toString();
+      setJsonStorage("LF_sanitycheck", {random: random});
+      if (getJsonStorage("LF_sanitycheck").random != random) {
+        throw new Error("sanity check failure");
+      }
+    } catch (e) {
+      Localform.alert(STORAGE_ERR_MSG);
+    }
+  }
+  
+  Localform.alert = function(msg) {
+    window.alert(msg);
+  };
+  
+  Localform.confirm = function(msg) {
+    return window.confirm(msg);
+  };
   
   Localform.restoreForm = function(form, data) {
     var inputs = form.querySelectorAll("input");
@@ -87,7 +109,9 @@ var Localform = (function() {
   };
 
   window.addEventListener("DOMContentLoaded", function(event) {
-    var forms = document.getElementsByTagName("form");
+    var forms;
+    sanityCheck();
+    forms = document.getElementsByTagName("form");
     [].slice.call(forms).forEach(function(form) {
       Localform.restoreForm(form, getJsonStorage(AUTOSAVE_KEY_NAME, {}));
     });
@@ -108,7 +132,7 @@ var Localform = (function() {
 
     event.preventDefault();
     if (!event.target.checkValidity())
-      return alert(VALIDATION_ERR_MSG);
+      return Localform.alert(VALIDATION_ERR_MSG);
     results.push(result);
     setJsonStorage(RESULTS_KEY_NAME, results);
     setJsonStorage(AUTOSAVE_KEY_NAME, {});
@@ -118,7 +142,7 @@ var Localform = (function() {
     req.setRequestHeader('Content-Type', 'application/json');
     req.send(JSON.stringify(result));
 
-    alert(THANKS_MSG);
+    Localform.alert(THANKS_MSG);
     window.removeEventListener("reset", confirmFormReset, true);
     event.target.reset();
     window.addEventListener("reset", confirmFormReset, true);
@@ -154,18 +178,6 @@ var Localform = (function() {
     setJsonStorage(RESULTS_KEY_NAME, []);
     setJsonStorage(AUTOSAVE_KEY_NAME, {});
   };
-  
-  (function sanityCheck() {
-    try {
-      var random = Math.random().toString();
-      setJsonStorage("LF_sanitycheck", {random: random});
-      if (getJsonStorage("LF_sanitycheck").random != random) {
-        throw new Error("sanity check failure");
-      }
-    } catch (e) {
-      alert(STORAGE_ERR_MSG);
-    }
-  })();
   
   return Localform;
 })();

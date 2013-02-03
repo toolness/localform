@@ -57,6 +57,9 @@
     <script src="../localform.js"></script>
     <script src="qunit.js"></script>
     <script>
+    Localform.storagePrefix = "TEST_";
+    Localform.confirm = function() { return true; }
+
     module("localform");
     
     (function formTests() {
