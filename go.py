@@ -105,19 +105,20 @@ def cmd_serve(args):
     "run development web server"
     
     ipstr = args.ip
-    ips = [args.ip]
+    ips = [(args.ip, '')]
     if not ipstr:
         ipstr = 'all IP interfaces'
-        ips = get_ip_addresses()
+        ips = get_friendly_ip_addresses()
     server = make_server(args.ip, args.port, make_app())
     print "serving on %s port %d" % (ipstr, args.port)
     print "you can access the web server at:"
-    for ip in ips:
-        notes = ""
+    for ip, notes in ips:
         if ip == "127.0.0.1":
             ip = "localhost"
-            notes = "(accessible from this computer only)"
+            notes = "this computer only"
         url = "http://%s:%d" % (ip, args.port)
+        if notes:
+            notes = "(via %s)" % notes
         print "  %-30s %s" % (url, notes)
     print "press ctrl-c to stop the server."
     server.serve_forever()
@@ -145,12 +146,29 @@ def runcmd(args):
         pass
     return stdout
 
+def get_friendly_ip_addresses():
+    friendly_ips = []
+    if_map = {}
+    networksetup = runcmd(['networksetup', '-listnetworkserviceorder'])
+    for line in networksetup.splitlines():
+        match = re.search(r'^\(Hardware Port: (.+), Device: (.+)\)$', line)
+        if match:
+            if_map[match.group(2)] = match.group(1)
+    for ip, if_name in get_ip_addresses():
+        friendly_ips.append((ip, if_map.get(if_name, if_name)))
+    return friendly_ips
+
 def get_ip_addresses():
     ips = []
+    curr_interface = ''
     for line in runcmd(['ifconfig']).splitlines():
-        match = re.search(r'inet ([0-9.]+)', line)
-        if match:
-            ips.append(match.group(1))
+        if_match = re.search(r'^([a-z0-9]+):', line)
+        if if_match:
+            curr_interface = if_match.group(1)
+        ip_match = re.search(r'inet ([0-9.]+)', line)
+        if ip_match:
+            ips.append((ip_match.group(1), curr_interface))
+            curr_interface = ''
     return ips
 
 def main():
