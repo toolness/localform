@@ -54,7 +54,7 @@ var Localform = (function() {
   
   function inputIsTextlike(input) {
     return (input.type == "text" || input.type == "textarea" ||
-            input.type == "email");
+            input.type == "email" || input.type == "number");
   }
   
   function sanityCheck() {
