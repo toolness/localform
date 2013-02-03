@@ -115,6 +115,7 @@ def cmd_serve(args):
     for ip in ips:
         notes = ""
         if ip == "127.0.0.1":
+            ip = "localhost"
             notes = "(accessible from this computer only)"
         url = "http://%s:%d" % (ip, args.port)
         print "  %-30s %s" % (url, notes)
