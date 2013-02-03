@@ -7,6 +7,9 @@ var Localform = (function() {
   var THANKS_MSG = "Thanks for your submission!";
   var STORAGE_ERR_MSG = "FATAL ERROR: Unable to store data locally!";
   var VALIDATION_ERR_MSG = "Please fill out all required fields.";
+  var CONFIRM_FORM_RESET_MSG = "Clearing the form will remove all the data " +
+                               "you've entered so far, and cannot be " +
+                               "undone. Are you sure?";
 
   function csvLine(items) {
     return items.map(function(item) {
@@ -39,6 +42,12 @@ var Localform = (function() {
       alert(STORAGE_ERR_MSG);
       throw e;
     }
+  }
+  
+  function confirmFormReset(event) {
+    if (!confirm(CONFIRM_FORM_RESET_MSG))
+      return event.preventDefault();
+    setJsonStorage(AUTOSAVE_KEY_NAME, {});
   }
   
   Localform.restoreForm = function(form, data) {
@@ -90,6 +99,8 @@ var Localform = (function() {
     setJsonStorage(AUTOSAVE_KEY_NAME, formData);
   }, false);
   
+  window.addEventListener("reset", confirmFormReset, true);
+  
   window.addEventListener("submit", function(event) {
     var results = Localform.getData();
     var result = Localform.saveForm(event.target);
@@ -108,7 +119,9 @@ var Localform = (function() {
     req.send(JSON.stringify(result));
 
     alert(THANKS_MSG);
+    window.removeEventListener("reset", confirmFormReset, true);
     event.target.reset();
+    window.addEventListener("reset", confirmFormReset, true);
   }, true);
   
   Localform._testing = {
