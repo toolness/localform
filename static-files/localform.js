@@ -77,7 +77,8 @@ var Localform = (function() {
     [].slice.call(inputs).forEach(function(input) {
       if (!input.id)
         return;
-      if ((input.type == "text" || input.type == "textarea") &&
+      if ((input.type == "text" || input.type == "textarea" ||
+           input.type == "email") &&
           typeof(data[input.id]) == "string")
         input.value = data[input.id];
       if (input.type == "checkbox" && typeof(data[input.id] == "boolean"))
@@ -93,7 +94,8 @@ var Localform = (function() {
     [].slice.call(inputs).forEach(function(input) {
       if (!input.id)
         return;
-      if (input.type == "text" || input.type == "textarea")
+      if (input.type == "text" || input.type == "textarea" ||
+          input.type == "email")
         result[input.id] = input.value;
       if (input.type == "checkbox")
         result[input.id] = input.checked;
