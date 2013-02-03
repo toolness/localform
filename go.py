@@ -114,6 +114,7 @@ def cmd_serve(args):
     print "you can access the web server at:"
     for ip in ips:
         print "  http://%s:%d" % (ip, args.port)
+    print "press ctrl-c to stop the server."
     server.serve_forever()
 
 def cmd_serve_args(parser):
