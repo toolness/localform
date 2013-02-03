@@ -15,7 +15,7 @@ $(window).ready(function() {
         .appendTo(row);
       answers.each(function(i) {
         var id = baseId + "_" + (i+1);
-        var input = $('<input type="radio">')
+        var input = $('<input type="radio" required>')
           .attr("name", baseId)
           .attr("value", i+1)
           .attr("id", id);
