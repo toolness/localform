@@ -134,12 +134,20 @@ def cmd_list(args):
     for row in get_db_rows(init_db()):
         print row
 
+def runcmd(args):
+    stdout = ""
+    try:
+        popen = subprocess.Popen(args, stdout=subprocess.PIPE,
+                                 stdin=subprocess.PIPE,
+                                 stderr=subprocess.STDOUT)
+        stdout, stderr = popen.communicate()
+    except Exception:
+        pass
+    return stdout
+
 def get_ip_addresses():
-    popen = subprocess.Popen(['ifconfig'], stdout=subprocess.PIPE,
-                             stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
-    stdout, stderr = popen.communicate()
     ips = []
-    for line in stdout.splitlines():
+    for line in runcmd(['ifconfig']).splitlines():
         match = re.search(r'inet ([0-9.]+)', line)
         if match:
             ips.append(match.group(1))
