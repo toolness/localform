@@ -7,6 +7,8 @@ import sys
 import time
 import mimetypes
 import sqlite3
+import subprocess
+import re
 
 try:
     import json
@@ -103,10 +105,15 @@ def cmd_serve(args):
     "run development web server"
     
     ipstr = args.ip
+    ips = [args.ip]
     if not ipstr:
         ipstr = 'all IP interfaces'
+        ips = get_ip_addresses()
     server = make_server(args.ip, args.port, make_app())
     print "serving on %s port %d" % (ipstr, args.port)
+    print "you can access the web server at:"
+    for ip in ips:
+        print "  http://%s:%d" % (ip, args.port)
     server.serve_forever()
 
 def cmd_serve_args(parser):
@@ -120,6 +127,17 @@ def cmd_list(args):
 
     for row in get_db_rows(init_db()):
         print row
+
+def get_ip_addresses():
+    popen = subprocess.Popen(['ifconfig'], stdout=subprocess.PIPE,
+                             stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
+    stdout, stderr = popen.communicate()
+    ips = []
+    for line in stdout.splitlines():
+        match = re.search(r'inet ([0-9.]+)', line)
+        if match:
+            ips.append(match.group(1))
+    return ips
 
 def main():
     parser = argparse.ArgumentParser()
