@@ -140,6 +140,19 @@
       });
     })();
 
+    test("confirming false to reset aborts it", function() {
+      Localform.confirm = function() { return false; };
+      $("#inputName", form).val("John Doe");
+      form.reset();
+      equal($("#inputName", form).val(), "John Doe");
+    });
+
+    test("confirming true to reset clears it", function() {
+      $("#inputName", form).val("John Doe");
+      form.reset();
+      equal($("#inputName", form).val(), "");
+    });
+    
     test("csvLine() works", function() {
       var csvLine = Localform._testing.csvLine;
       

@@ -118,6 +118,7 @@ var Localform = (function() {
     forms = document.getElementsByTagName("form");
     [].slice.call(forms).forEach(function(form) {
       Localform.restoreForm(form, getJsonStorage(AUTOSAVE_KEY_NAME, {}));
+      form.addEventListener("reset", confirmFormReset, true);
     });
   }, false);
   
@@ -126,8 +127,6 @@ var Localform = (function() {
     var formData = Localform.saveForm(event.target.form);
     setJsonStorage(AUTOSAVE_KEY_NAME, formData);
   }, false);
-  
-  window.addEventListener("reset", confirmFormReset, true);
   
   window.addEventListener("submit", function(event) {
     var results = Localform.getData();
@@ -147,9 +146,9 @@ var Localform = (function() {
     req.send(JSON.stringify(result));
 
     Localform.alert(THANKS_MSG);
-    window.removeEventListener("reset", confirmFormReset, true);
+    event.target.removeEventListener("reset", confirmFormReset, true);
     event.target.reset();
-    window.addEventListener("reset", confirmFormReset, true);
+    event.target.addEventListener("reset", confirmFormReset, true);
   }, true);
   
   Localform._testing = {
