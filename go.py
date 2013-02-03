@@ -111,15 +111,16 @@ def cmd_serve(args):
         ips = get_friendly_ip_addresses()
     server = make_server(args.ip, args.port, make_app())
     print "serving on %s port %d" % (ipstr, args.port)
-    print "you can access the web server at:"
-    for ip, notes in ips:
-        if ip == "127.0.0.1":
-            ip = "localhost"
-            notes = "this computer only"
-        url = "http://%s:%d" % (ip, args.port)
-        if notes:
-            notes = "(via %s)" % notes
-        print "  %-30s %s" % (url, notes)
+    if ips:
+        print "you can access the web server at:"
+        for ip, notes in ips:
+            if ip == "127.0.0.1":
+                ip = "localhost"
+                notes = "this computer only"
+            url = "http://%s:%d" % (ip, args.port)
+            if notes:
+                notes = "(via %s)" % notes
+            print "  %-30s %s" % (url, notes)
     print "press ctrl-c to stop the server."
     server.serve_forever()
 
