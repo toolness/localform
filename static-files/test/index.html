@@ -63,15 +63,26 @@
     <script src="../localform.js"></script>
     <script src="qunit.js"></script>
     <script>
-    var form = $("#test-form")[0];
+    var formTemplate = $("#test-form");
+    var form;
+    var alerts = [];
     
     Localform.storagePrefix = "TEST_";
+    Localform.autostart = false;
 
     module("localform", {
       setup: function() {
+        form = formTemplate.remove().clone()[0];
+        document.body.appendChild(form);
         Localform.confirm = function() { return true; };
+        Localform.alert = function(msg) { alerts.push(msg); };
+        alerts = [];
         Localform.resetData();
+        Localform.activateForm(form);
         form.reset();
+      },
+      teardown: function() {
+        document.body.removeChild(form);
       }
     });
     
@@ -140,6 +151,47 @@
       });
     })();
 
+    test("submit works when validation succeeds", function() {
+      var json;
+      var defaultPrevented = false;
+
+      $("#inputAge", form).val("14");
+      $("#distractionLevel_1", form)[0].checked = true;
+      $("#dangerLevel_2", form)[0].checked = true;
+      $("#isNoob_1", form)[0].checked = true;
+
+      Localform.submitJSON = function(result) { json = result; };
+      Localform._testing.onFormSubmit({
+        target: form,
+        preventDefault: function() { defaultPrevented = true; }
+      });
+      ok(defaultPrevented);
+      deepEqual(json, {
+        "dangerLevel": "2",
+        "distractionLevel": "1",
+        "inputAge": "14",
+        "inputEmail": "",
+        "inputName": "",
+        "isCool": false,
+        "isNoob": "1",
+        "isNotBad": false
+      });
+      deepEqual(alerts, ["Thanks for your submission!"]);
+    });
+
+    test("submit fails when validation fails", function() {
+      var defaultPrevented = false;
+      $("#inputAge", form).val("");
+      
+      ok(!form.checkValidity());
+      Localform._testing.onFormSubmit({
+        target: form,
+        preventDefault: function() { defaultPrevented = true; }
+      });
+      ok(defaultPrevented);
+      deepEqual(alerts, ["Please fill out all required fields."]);
+    });
+    
     test("confirming false to reset aborts it", function() {
       Localform.confirm = function() { return false; };
       $("#inputName", form).val("John Doe");

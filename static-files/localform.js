@@ -2,7 +2,8 @@
 
 var Localform = (function() {
   var Localform = {
-    storagePrefix: ""
+    storagePrefix: "",
+    autostart: true
   };
   var RESULTS_KEY_NAME = "LF_results";
   var AUTOSAVE_KEY_NAME = "LF_autosave_result";
@@ -52,6 +53,24 @@ var Localform = (function() {
     setJsonStorage(AUTOSAVE_KEY_NAME, {});
   }
   
+  function onFormSubmit(event) {
+    var results = Localform.getData();
+    var result = Localform.saveForm(event.target);
+
+    event.preventDefault();
+    if (!event.target.checkValidity())
+      return Localform.alert(VALIDATION_ERR_MSG);
+    results.push(result);
+    setJsonStorage(RESULTS_KEY_NAME, results);
+    setJsonStorage(AUTOSAVE_KEY_NAME, {});
+
+    Localform.submitJSON(result);
+    Localform.alert(THANKS_MSG);
+    event.target.removeEventListener("reset", confirmFormReset, true);
+    event.target.reset();
+    event.target.addEventListener("reset", confirmFormReset, true);
+  }
+
   function inputIsTextlike(input) {
     return (input.type == "text" || input.type == "textarea" ||
             input.type == "email" || input.type == "number");
@@ -68,6 +87,13 @@ var Localform = (function() {
       Localform.alert(STORAGE_ERR_MSG);
     }
   }
+  
+  Localform.submitJSON = function(result, xhr) {
+    var req = xhr || new XMLHttpRequest();
+    req.open("POST", "/submit?bust=" + Date.now());
+    req.setRequestHeader('Content-Type', 'application/json');
+    req.send(JSON.stringify(result));
+  };
   
   Localform.alert = function(msg) {
     window.alert(msg);
@@ -115,44 +141,26 @@ var Localform = (function() {
   window.addEventListener("DOMContentLoaded", function(event) {
     var forms;
     sanityCheck();
-    forms = document.getElementsByTagName("form");
-    [].slice.call(forms).forEach(function(form) {
-      Localform.restoreForm(form, getJsonStorage(AUTOSAVE_KEY_NAME, {}));
-      form.addEventListener("reset", confirmFormReset, true);
-    });
+    if (Localform.autostart) {
+      forms = document.getElementsByTagName("form");
+      [].slice.call(forms).forEach(Localform.activateForm);
+    }
   }, false);
-  
-  document.body.addEventListener("change", function(event) {
-    if (!event.target.form) return;
-    var formData = Localform.saveForm(event.target.form);
-    setJsonStorage(AUTOSAVE_KEY_NAME, formData);
-  }, false);
-  
-  window.addEventListener("submit", function(event) {
-    var results = Localform.getData();
-    var result = Localform.saveForm(event.target);
-    var req;
-
-    event.preventDefault();
-    if (!event.target.checkValidity())
-      return Localform.alert(VALIDATION_ERR_MSG);
-    results.push(result);
-    setJsonStorage(RESULTS_KEY_NAME, results);
-    setJsonStorage(AUTOSAVE_KEY_NAME, {});
-
-    req = new XMLHttpRequest();
-    req.open("POST", "/submit?bust=" + Date.now());
-    req.setRequestHeader('Content-Type', 'application/json');
-    req.send(JSON.stringify(result));
-
-    Localform.alert(THANKS_MSG);
-    event.target.removeEventListener("reset", confirmFormReset, true);
-    event.target.reset();
-    event.target.addEventListener("reset", confirmFormReset, true);
-  }, true);
   
   Localform._testing = {
-    csvLine: csvLine
+    csvLine: csvLine,
+    onFormSubmit: onFormSubmit
+  };
+  
+  Localform.activateForm = function(form) {
+    Localform.restoreForm(form, getJsonStorage(AUTOSAVE_KEY_NAME, {}));
+    form.addEventListener("reset", confirmFormReset, true);
+    form.addEventListener("change", function(event) {
+      if (!event.target.form) return;
+      var formData = Localform.saveForm(event.target.form);
+      setJsonStorage(AUTOSAVE_KEY_NAME, formData);
+    }, false);
+    form.addEventListener("submit", onFormSubmit, true);
   };
   
   Localform.getDataAsCSV = function(data) {
