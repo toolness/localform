@@ -19,59 +19,65 @@
         <p>Submit this form, and all your data will be stored locally on your device, and not on the cloud, ensuring compliance with the ol’ <a href="http://en.wikipedia.org/wiki/Institutional_review_board">IRB</a>.</p>
         <p>Submitted data can be retrieved via the <a href="admin.html">admin</a> page.</p>
       </div>
-      <form class="form-horizontal">
-        <!-- This is an example of a table of radio buttons. -->
-        <div data-role="radio-button-table" class="table table-striped">
-          <!-- These comprise the columns of the table, one for each 
-               type of response. -->
-          <ol class="answers">
-            <li>NO!! Not at all like me.</li>
-            <li>Not very much like me.</li>
-            <li>A little not like me.</li>
-          </ol>
-          <!-- These are the rows of the table, one for each question.
-               The 'id' attribute indicates the name of the field in the
-               CSV output. The value of the field will be a number
-               that indicates the answer number that the user selected. -->
-          <ol class="questions">
-            <li id="distractionLevel">I don't get distracted when I'm learning how to use technology.</li>
-            <li id="dangerLevel">My middle name is "danger".</li>
-          </ol>
-        </div>
-        <div class="control-group">
-          <label class="control-label" for="inputName">Name</label>
-          <div class="controls">
-            <input type="text" id="inputName" placeholder="Name" autocomplete="off" required>
-          </div>
-        </div>
-        <div class="control-group">
-          <!-- Note how the value of the 'for' attribute corresponds to
-               the id of the input element that the label is for. 
-               While this isn't required for non-vision-impaired users,
-               it is useful for those who don't have sight, as 
-               assistive interfaces will use the metadata to provide
-               a better user experience. -->
-          <label class="control-label" for="inputEmail">Email</label>
-          <div class="controls">
-            <!-- The 'id' attribute below indicates the name of the field
+      <form>
+        <h2>About You</h2>
+        <ol>
+          <li>
+            <label>What is your name?</label>
+            <!-- The 'id' attributes below indicates the name of the fields
                  in the CSV output. -->
-            <input type="email" id="inputEmail" placeholder="Email" autocomplete="off" required>
-          </div>
-        </div>
-        <div class="control-group">
-          <label class="control-label" for="inputAge">Age</label>
-          <div class="controls">
-            <input type="number" id="inputAge" placeholder="Age" min="4" max="100" pattern="\d+" autocomplete="off" required>
-          </div>
-        </div>
-        <div class="control-group">
-          <div class="controls">
-            <label class="checkbox">
-              <input type="checkbox" id="isCool" autocomplete="off"> I am cool.
+            <input type="text" placeholder="First Name" id="firstName" autocomplete="off" required>
+            <input type="text" placeholder="Last Name" id="lastName" autocomplete="off" required>
+          </li>
+          <li>
+            <p>If you could be an animal, what would it be?</p>
+            <label class="radio">
+              <input type="radio" name="animal" id="animal_1" value="1" 
+               required>
+              A rhinoceros.
             </label>
-            <button type="submit" class="btn">Submit</button>
-            <button type="reset" class="btn btn-danger">Clear Form</button>
-          </div>
+            <label class="radio">
+              <input type="radio" name="animal" id="animal_2" value="2" 
+               required>
+              A hamburger.
+            </label>
+            <label class="radio inline">
+              <input type="radio" name="animal" id="animal_3" value="3" 
+               required>
+              Other:
+            </label>
+            <!-- Note that this doesn't have the 'required' attribute; 
+                 unfortunately, there's currently not an easy way to
+                 force the field to be required only if its corresponding
+                 radio box has been selected. -->
+            <input type="text" placeholder="Please Specify" id="animal_other" autocomplete="off">
+          </li>
+          <li>
+            <p>How would you rate yourself on these questions?</p>
+            <!-- This is an example of a table of radio buttons. -->
+            <div data-role="radio-button-table" class="table table-striped">
+              <!-- These comprise the columns of the table, one for each 
+                   type of response. -->
+              <ol class="answers">
+                <li>NO!! Not at all like me.</li>
+                <li>Not very much like me.</li>
+                <li>A little not like me.</li>
+              </ol>
+              <!-- These are the rows of the table, one for each question.
+                   The 'id' attribute indicates the name of the field in the
+                   CSV output. The value of the field will be a number
+                   that indicates the answer number that the user selected. 
+                   -->
+              <ol class="questions">
+                <li id="distractionLevel">I don't get distracted when I'm learning how to use technology.</li>
+                <li id="dangerLevel">My middle name is "danger".</li>
+              </ol>
+            </div>
+          </li>
+        </ol>
+        <div>
+          <button type="submit" class="btn">Submit</button>
+          <button type="reset" class="btn btn-danger">Clear Form</button>
         </div>
       </form>
     </div>
