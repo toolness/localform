@@ -32,6 +32,9 @@
       <form autocomplete="off">
         <h2>About You</h2>
         <ol class="section-questions">
+          
+          <!-- Standard text input example -->
+          
           <li>
             <label>What is your name?</label>
             <!-- The 'id' attributes below indicates the name of the fields
@@ -39,12 +42,18 @@
             <input type="text" placeholder="First Name" id="firstName" required>
             <input type="text" placeholder="Last Name" id="lastName" required>
           </li>
+          
+          <!-- Numeric input example -->
+          
           <li>
             <label>What is your zip code?</label>
             <!-- Note that the type here is 'number', which will make
                  iOS show a touch keyboard with numbers. -->
             <input type="number" placeholder="Zip Code" id="zipCode" required>
           </li>
+          
+          <!-- Radio button (single selection) example -->
+          
           <li>
             <p>If you could be any one animal, what would it be?</p>
             <label class="radio">
@@ -68,6 +77,9 @@
                  radio box has been selected. -->
             <input type="text" placeholder="Please Specify" id="animal_other">
           </li>
+          
+          <!-- Checkbox (multiple selection) example -->
+          
           <li>
             <p>Other than English, what languages do you speak?</p>
             <label class="checkbox inline">
@@ -80,6 +92,9 @@
               <input type="checkbox" id="language_leetspeak"> 1337
             </label>
           </li>
+          
+          <!-- Checkbox table example -->
+          
           <li>
             <p>What things have you used at what places?</p>
             <table class="table table-striped">
@@ -100,6 +115,9 @@
               </tr>
             </table>
           </li>
+          
+          <!-- Radio button table example -->
+          
           <li>
             <p>How would you rate yourself on these questions?</p>
             <!-- This is an example of a table of radio buttons. -->
@@ -123,6 +141,7 @@
             </div>
           </li>
         </ol>
+        
         <div>
           <button type="submit" class="btn">Submit</button>
           <button type="reset" class="btn btn-danger">Clear Form</button>
