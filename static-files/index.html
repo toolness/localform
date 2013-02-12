@@ -20,12 +20,19 @@
         <p>Submitted data can be retrieved via the <a href="admin.html">admin</a> page.</p>
       </div>
       <form class="form-horizontal">
+        <!-- This is an example of a table of radio buttons. -->
         <div data-role="radio-button-table" class="table table-striped">
+          <!-- These comprise the columns of the table, one for each 
+               type of response. -->
           <ol class="answers">
             <li>NO!! Not at all like me.</li>
             <li>Not very much like me.</li>
             <li>A little not like me.</li>
           </ol>
+          <!-- These are the rows of the table, one for each question.
+               The 'id' attribute indicates the name of the field in the
+               CSV output. The value of the field will be a number
+               that indicates the answer number that the user selected. -->
           <ol class="questions">
             <li id="distractionLevel">I don't get distracted when I'm learning how to use technology.</li>
             <li id="dangerLevel">My middle name is "danger".</li>
