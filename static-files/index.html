@@ -19,21 +19,21 @@
         <p>Submit this form, and all your data will be stored locally on your device, and not on the cloud, ensuring compliance with the ol’ <a href="http://en.wikipedia.org/wiki/Institutional_review_board">IRB</a>.</p>
         <p>Submitted data can be retrieved via the <a href="admin.html">admin</a> page.</p>
       </div>
-      <form>
+      <form autocomplete="off">
         <h2>About You</h2>
         <ol>
           <li>
             <label>What is your name?</label>
             <!-- The 'id' attributes below indicates the name of the fields
                  in the CSV output. -->
-            <input type="text" placeholder="First Name" id="firstName" autocomplete="off" required>
-            <input type="text" placeholder="Last Name" id="lastName" autocomplete="off" required>
+            <input type="text" placeholder="First Name" id="firstName" required>
+            <input type="text" placeholder="Last Name" id="lastName" required>
           </li>
           <li>
             <label>What is your zip code?</label>
             <!-- Note that the type here is 'number', which will make
                  iOS show a touch keyboard with numbers. -->
-            <input type="number" placeholder="Zip Code" id="zipCode" autocomplete="off" required>
+            <input type="number" placeholder="Zip Code" id="zipCode" required>
           </li>
           <li>
             <p>If you could be an animal, what would it be?</p>
@@ -56,7 +56,7 @@
                  unfortunately, there's currently not an easy way to
                  force the field to be required only if its corresponding
                  radio box has been selected. -->
-            <input type="text" placeholder="Please Specify" id="animal_other" autocomplete="off">
+            <input type="text" placeholder="Please Specify" id="animal_other">
           </li>
           <li>
             <p>How would you rate yourself on these questions?</p>
