@@ -165,14 +165,16 @@ var Localform = (function() {
   
   Localform.getDataAsCSV = function(data) {
     var lines = [];
-    var keys = null;
+    var keys = [];
     if (!data) data = this.getData();
     data.forEach(function(result) {
-      if (!keys) {
-        keys = Object.keys(result);
-        keys.sort();
-        lines.push(csvLine(keys));
-      }
+      Object.keys(result).forEach(function(key) {
+        if (keys.indexOf(key) == -1) keys.push(key);
+      });
+    });
+    keys.sort();
+    lines.push(csvLine(keys));
+    data.forEach(function(result) {
       lines.push(csvLine(keys.map(function(key) { return result[key]; })));
     });
     return lines.join("\n");

@@ -205,6 +205,21 @@
       equal($("#inputName", form).val(), "");
     });
     
+    test("getDataAsCSV() works", function() {
+      deepEqual(Localform.getDataAsCSV([
+        {
+          lol: "LOL1",
+          wut: "WUT1"
+        },
+        {
+          lol: "LOL2",
+          burger: "BURGER2"
+        }
+      ]), "burger,lol,wut\n" +
+          ",LOL1,WUT1\n" +
+          "BURGER2,LOL2,");
+    });
+    
     test("csvLine() works", function() {
       var csvLine = Localform._testing.csvLine;
       
