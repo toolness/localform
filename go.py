@@ -77,10 +77,13 @@ def make_app():
                 start_response('403 Forbidden',
                                [('Content-Type', 'text/plain')])
                 return ['this endpoint is only reachable from 127.0.0.1']
-            start_response('200 OK', [('Content-Type', 'application/json')])
-            return [json.dumps([
-                row['submission'] for row in get_db_rows(init_db())
+            conn = init_db()
+            body = [json.dumps([
+                row['submission'] for row in get_db_rows(conn)
             ])]
+            conn.close()
+            start_response('200 OK', [('Content-Type', 'application/json')])
+            return body
         if path.endswith('/'):
             path = '%sindex.html' % path
         fileparts = path[1:].split('/')
