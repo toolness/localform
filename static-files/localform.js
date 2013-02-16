@@ -152,7 +152,43 @@ var Localform = (function() {
     onFormSubmit: onFormSubmit
   };
   
+  Localform.validateFormStructure = function(form) {
+    var inputs = form.querySelectorAll("input");
+    var ids = {};
+    var radios = {};
+    var errors = [];
+    [].slice.call(inputs).forEach(function(input) {
+      if (!input.id)
+        return errors.push("an input has no id.");
+
+      if (input.id in ids)
+        errors.push("input#" + input.id + " matches multiple elements.");
+
+      ids[input.id] = true;
+      
+      if (!(inputIsTextlike(input) || input.type == "checkbox" ||
+          input.type == "radio"))
+        return errors.push("input#" + input.id + " of type " +
+                           input.type + " is unsupported.");
+      if (input.type == "radio") {
+        if (!input.name)
+          return errors.push("input#" + input.id + " radio has no name.");
+        if (!(input.name in radios))
+          radios[input.name] = [];
+        radios[input.name].push(input.id);
+      }
+    });
+    Object.keys(radios).forEach(function(name) {
+      if (radios[name].length == 1)
+        errors.push("only one radio button with name '" + name + "' exists.");
+    });
+    return errors;
+  };
+  
   Localform.activateForm = function(form) {
+    var errors = Localform.validateFormStructure(form);
+    if (errors.length && window.console)
+      console.log("Form structure validation errors:\n" + errors.join('\n'));
     Localform.restoreForm(form, getJsonStorage(AUTOSAVE_KEY_NAME, {}));
     form.addEventListener("reset", confirmFormReset, true);
     form.addEventListener("change", function(event) {
