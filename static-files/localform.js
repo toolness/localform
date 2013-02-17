@@ -14,20 +14,16 @@ var Localform = (function() {
                                "you've entered so far, and cannot be " +
                                "undone. Are you sure?";
 
-  function showFormStructureValidationError(form, info) {
+  function showFormStructureValidationError(info) {
     var alert = $('<div class="alert alert-error"></div>');
     var html = "<h4>Form Structure Validation Error</h4>" + 
-               '<a href="#">This</a> input element';
+               'The following input element';
     
     if (info.node.id)
       html += ' with id <code>' + info.node.id + '</code>';
 
     alert.html(html + " " + info.error)
-    alert.find("a").click(function() {
-      info.node.scrollIntoView();
-      return false;
-    });
-    alert.insertBefore(form);
+    alert.insertBefore(info.node);
   }
   
   function csvLine(items) {
@@ -206,7 +202,7 @@ var Localform = (function() {
   
   Localform.activateForm = function(form) {
     var errors = Localform.validateFormStructure(form);
-    errors.forEach(showFormStructureValidationError.bind(this, form));
+    errors.forEach(showFormStructureValidationError);
     Localform.restoreForm(form, getJsonStorage(AUTOSAVE_KEY_NAME, {}));
     form.addEventListener("reset", confirmFormReset, true);
     form.addEventListener("change", function(event) {
