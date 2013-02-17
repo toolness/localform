@@ -16,8 +16,8 @@ var Localform = (function() {
 
   function showFormStructureValidationError(info) {
     var alert = $('<div class="alert alert-error"></div>');
-    var html = "<h4>Form Structure Validation Error</h4>" + 
-               'The following input element';
+    var html = "<h4>Form HTML Structure Validation Error</h4>" + 
+               'Your HTML is bad! The following input element';
     
     if (info.node.id)
       html += ' with id <code>' + info.node.id + '</code>';
