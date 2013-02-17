@@ -14,6 +14,22 @@ var Localform = (function() {
                                "you've entered so far, and cannot be " +
                                "undone. Are you sure?";
 
+  function showFormStructureValidationError(form, info) {
+    var alert = $('<div class="alert alert-error"></div>');
+    var html = "<h4>Form Structure Validation Error</h4>" + 
+               '<a href="#">This</a> input element';
+    
+    if (info.node.id)
+      html += ' with id <code>' + info.node.id + '</code>';
+
+    alert.html(html + " " + info.error)
+    alert.find("a").click(function() {
+      info.node.scrollIntoView();
+      return false;
+    });
+    alert.insertBefore(form);
+  }
+  
   function csvLine(items) {
     return items.map(function(item) {
       if (typeof(item) == "string") {
@@ -159,36 +175,38 @@ var Localform = (function() {
     var errors = [];
     [].slice.call(inputs).forEach(function(input) {
       if (!input.id)
-        return errors.push("an input has no id.");
+        return errors.push({error: "has no id."});
 
       if (input.id in ids)
-        errors.push("input#" + input.id + " matches multiple elements.");
+        errors.push({node: input, error: "doesn't have a unique id."});
 
       ids[input.id] = true;
       
       if (!(inputIsTextlike(input) || input.type == "checkbox" ||
           input.type == "radio"))
-        return errors.push("input#" + input.id + " of type " +
-                           input.type + " is unsupported.");
+        return errors.push({node: input, error: "has an unsupported type"});
       if (input.type == "radio") {
         if (!input.name)
-          return errors.push("input#" + input.id + " radio has no name.");
+          return errors.push({node: input, error: "has no name attribute"});
         if (!(input.name in radios))
           radios[input.name] = [];
-        radios[input.name].push(input.id);
+        radios[input.name].push(input);
       }
     });
     Object.keys(radios).forEach(function(name) {
       if (radios[name].length == 1)
-        errors.push("only one radio button with name '" + name + "' exists.");
+        errors.push({
+          node: radios[name],
+          error: "is the only radio button with name <code>" + name +
+                 "</code>."
+        });
     });
     return errors;
   };
   
   Localform.activateForm = function(form) {
     var errors = Localform.validateFormStructure(form);
-    if (errors.length && window.console)
-      console.log("Form structure validation errors:\n" + errors.join('\n'));
+    errors.forEach(showFormStructureValidationError.bind(this, form));
     Localform.restoreForm(form, getJsonStorage(AUTOSAVE_KEY_NAME, {}));
     form.addEventListener("reset", confirmFormReset, true);
     form.addEventListener("change", function(event) {
