@@ -54,6 +54,8 @@
     $(window).ready(function() {
       refreshPage();
       $("#reset-data").click(function() {
+        if (!window.confirm("Are you sure? This can't be undone."))
+          return;
         Localform.resetData();
         refreshPage();
       });
