@@ -149,6 +149,19 @@
         Localform.restoreForm(form, {});
         deepEqual(Localform.saveForm(form), emptyFormJSON);
       });
+
+      test("saveWorkInProgress() works", function() {
+        var oneFieldFilled = $.extend({}, emptyFormJSON, {
+          "inputName": "John Doe"
+        });
+        deepEqual(Localform.getAutosaveData(), {});
+        deepEqual(Localform.getWorksInProgress(), {});
+        $("#inputName", form).val("John Doe");
+        Localform.saveWorkInProgress("temp", Localform.saveForm(form));
+        deepEqual(Localform.getWorksInProgress(), {temp: oneFieldFilled});
+        Localform.setAutosaveData(Localform.getWorksInProgress().temp);
+        deepEqual(Localform.getAutosaveData(), oneFieldFilled);
+      });
     })();
 
     test("submit works when validation succeeds", function() {

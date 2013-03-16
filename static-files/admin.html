@@ -25,15 +25,37 @@
       </div>
       <button class="btn btn-danger" id="reset-data">Clear Data</button>
       <button class="btn" id="resubmit-data">Resubmit Data to Server</button>
+      <h2>Works in Progress</h2>
+      <p>The current state of your form can be saved for completion at
+        a later time, allowing others to fill out your form during the
+        interim.</p>
+      <ul id="wips"></ul>
+      <button class="btn" id="save-wip">Save Work in Progress&hellip;</button>
     </div>
     <script src="localform.js"></script>
     <script src="jquery.min.js"></script>
     <script>
-    $(window).ready(function() {
+    function refreshPage() {
+      var wips = Localform.getWorksInProgress();
+
       $("#output").val(Localform.getDataAsCSV());
+      $("#wips").empty();
+      Object.keys(wips).forEach(function(name) {
+        var btn = $('<button class="btn btn-mini">restore</button>');
+        var li = $('<li></li>').text(name+' ').append(btn).appendTo("#wips");
+        btn.click(function() {
+          Localform.setAutosaveData(wips[name]);
+          alert("Work in progress '" + name + "' restored. Visit your form " +
+                "to continue your work.");
+        });
+      });
+    }
+
+    $(window).ready(function() {
+      refreshPage();
       $("#reset-data").click(function() {
         Localform.resetData();
-        $("#output").val(Localform.getDataAsCSV());
+        refreshPage();
       });
       $("#resubmit-data").click(function() {
         var results = Localform.getData();
@@ -51,6 +73,14 @@
             }
           });
         });
+      });
+      $("#save-wip").click(function() {
+        var name = window.prompt("Enter a name for the work in progress.");
+
+        if (!name) return;
+        Localform.saveWorkInProgress(name, Localform.getAutosaveData());
+        Localform.setAutosaveData({});
+        refreshPage();
       });
     });
     </script>

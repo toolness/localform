@@ -7,6 +7,7 @@ var Localform = (function() {
   };
   var RESULTS_KEY_NAME = "LF_results";
   var AUTOSAVE_KEY_NAME = "LF_autosave_result";
+  var WIP_KEY_NAME = "LF_wip_results";
   var THANKS_MSG = "Thanks for your submission!";
   var STORAGE_ERR_MSG = "FATAL ERROR: Unable to store data locally!";
   var VALIDATION_ERR_MSG = "Please fill out all required fields.";
@@ -242,7 +243,28 @@ var Localform = (function() {
   Localform.resetData = function() {
     setJsonStorage(RESULTS_KEY_NAME, []);
     setJsonStorage(AUTOSAVE_KEY_NAME, {});
+    setJsonStorage(WIP_KEY_NAME, {});
   };
   
+  Localform.getAutosaveData = function() {
+    return getJsonStorage(AUTOSAVE_KEY_NAME, {});
+  };
+
+  Localform.setAutosaveData = function(data) {
+    if (!$.isPlainObject(data))
+      throw new TypeError("expected plain object");
+    setJsonStorage(AUTOSAVE_KEY_NAME, data);
+  };
+
+  Localform.getWorksInProgress = function() {
+    return getJsonStorage(WIP_KEY_NAME, {});
+  };
+
+  Localform.saveWorkInProgress = function(name, data) {
+    var wips = this.getWorksInProgress();
+    wips[name] = data;
+    setJsonStorage(WIP_KEY_NAME, wips);
+  };
+
   return Localform;
 })();
