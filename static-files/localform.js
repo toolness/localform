@@ -63,6 +63,7 @@ var Localform = (function() {
     if (!Localform.confirm(CONFIRM_FORM_RESET_MSG))
       return event.preventDefault();
     setJsonStorage(AUTOSAVE_KEY_NAME, {});
+    $(this).trigger('localformreset');
   }
   
   function onFormSubmit(event) {
@@ -81,6 +82,7 @@ var Localform = (function() {
     event.target.removeEventListener("reset", confirmFormReset, true);
     event.target.reset();
     event.target.addEventListener("reset", confirmFormReset, true);
+    $(this).trigger('localformsubmit');
   }
 
   function inputIsTextlike(input) {
