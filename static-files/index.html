@@ -27,7 +27,12 @@
       <div class="hero-unit">
         <h1>Local Form Demo</h1>
         <p>Submit this form, and all your data will be stored locally on your device, and not on the cloud, ensuring compliance with the ol’ <a href="http://en.wikipedia.org/wiki/Institutional_review_board">IRB</a>.</p>
-        <p>Submitted data can be retrieved via the <a href="admin.html">admin</a> page.</p>
+        <p>Data submitted on this device can be retrieved via the 
+          <a href="admin.html">local device admin</a> page.</p>
+        <p>Data submitted to the server can be retrieved by visiting 
+          <a id="server-admin">http://localhost:8000/server-admin.html</a> 
+          on the server machine.
+        </p>
       </div>
       <form autocomplete="off">
         <h2>About You</h2>
@@ -151,5 +156,12 @@
     <script src="jquery.min.js"></script>
     <script src="radio-button-table.js"></script>
     <script src="localform.js"></script>
+    <script>
+    $(window).ready(function() {
+      var port = location.port ? ':' + location.port : '';
+      var url = $("a#server-admin").text().replace(':8000', port);
+      $("a#server-admin").text(url).attr("href", url);
+    });
+    </script>
   </body>
 </html>
