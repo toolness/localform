@@ -30,6 +30,7 @@
         a later time, allowing others to fill out your form in the
         meantime.</p>
       <ul id="wips"></ul>
+      <button class="btn btn-danger" id="reset-wips">Clear Works in Progress</button>
       <button class="btn" id="save-wip">Save Work in Progress&hellip;</button>
     </div>
     <script src="localform.js"></script>
@@ -44,6 +45,10 @@
         var btn = $('<button class="btn btn-mini">restore</button>');
         var li = $('<li></li>').text(name+' ').append(btn).appendTo("#wips");
         btn.click(function() {
+          if (!window.confirm("Are you sure you want to restore the work " +
+                              "in progress '" + name + "'? Any data " +
+                              "currently in the form will be replaced."))
+            return;
           Localform.setAutosaveData(wips[name]);
           alert("Work in progress '" + name + "' restored. Visit your form " +
                 "to continue your work.");
@@ -75,6 +80,12 @@
             }
           });
         });
+      });
+      $("#reset-wips").click(function() {
+        if (!window.confirm("Are you sure? This can't be undone."))
+          return;
+        Localform.resetWorksInProgress();
+        refreshPage();
       });
       $("#save-wip").click(function() {
         var name = window.prompt("Enter a name for the work in progress.");

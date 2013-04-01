@@ -78,6 +78,7 @@
         Localform.alert = function(msg) { alerts.push(msg); };
         alerts = [];
         Localform.resetData();
+        Localform.resetWorksInProgress();
         Localform.activateForm(form);
         form.reset();
       },
@@ -161,6 +162,8 @@
         deepEqual(Localform.getWorksInProgress(), {temp: oneFieldFilled});
         Localform.setAutosaveData(Localform.getWorksInProgress().temp);
         deepEqual(Localform.getAutosaveData(), oneFieldFilled);
+        Localform.resetWorksInProgress();
+        deepEqual(Localform.getWorksInProgress(), {});
       });
     })();
 

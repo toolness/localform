@@ -243,7 +243,6 @@ var Localform = (function() {
   Localform.resetData = function() {
     setJsonStorage(RESULTS_KEY_NAME, []);
     setJsonStorage(AUTOSAVE_KEY_NAME, {});
-    setJsonStorage(WIP_KEY_NAME, {});
   };
   
   Localform.getAutosaveData = function() {
@@ -264,6 +263,10 @@ var Localform = (function() {
     var wips = this.getWorksInProgress();
     wips[name] = data;
     setJsonStorage(WIP_KEY_NAME, wips);
+  };
+
+  Localform.resetWorksInProgress = function() {
+    setJsonStorage(WIP_KEY_NAME, {});
   };
 
   return Localform;
